@@ -4,6 +4,6 @@ from sys import argv
 from subprocess import call
 
 script, file_path, days_older_than = argv
-print "\\"
+
 call(["find", file_path, "-mtime", "+"+days_older_than, "-exec", "rm", "-rf", "{}", "\\", ";"])
 
