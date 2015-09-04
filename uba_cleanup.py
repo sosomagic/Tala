@@ -12,7 +12,7 @@ cleanup_date = (datetime.date.today() - datetime.timedelta(days=120)).strftime('
 print "I will delete the build files older than 2 months, but I will keep the latest build for each milestone."
 
 
-for dirname, dirnames, filenames in os.walk('.'):
+for dirname, dirnames, filenames in os.walk(file_path):
 	for dir in dirnames:
 		if (re.match('\A\d\d\d\d\d\d\d\d_\d{0,4}', dir)):	
 			#print os.path.join(dirname,dir)
