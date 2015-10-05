@@ -1,6 +1,7 @@
 from sys import argv
 import subprocess
 import os
+from path import path
 
 script, view_path = argv
 
@@ -21,7 +22,8 @@ def replaceSymlinkbyFile(repo, symlink):
 	repoPath = os.path.join(view_path, repo)
 	os.chdir(repoPath)
 	symlinkPath = os.path.join(repoPath, symlink)
-	subprocess.Popen(['cat', symlinkPath])
+	print origFilePath = path(symlink).bytes()
+	#subprocess.Popen(['cat', symlinkPath])
 	#origFilePath = 
 	# if repo == 'BIWeb':
 	# 	# BIWebApp and BIWebSDK have been combined into one repository BIWeb
