@@ -1,7 +1,6 @@
 from sys import argv
 import subprocess
 import os
-from path import path
 
 script, view_path = argv
 
@@ -22,15 +21,21 @@ def replaceSymlinkbyFile(repo, symlink):
 	repoPath = os.path.join(view_path, repo)
 	os.chdir(repoPath)
 	symlinkPath = os.path.join(repoPath, symlink)
-	print origFilePath = path(symlink).bytes()
-	#subprocess.Popen(['cat', symlinkPath])
-	#origFilePath = 
-	# if repo == 'BIWeb':
-	# 	# BIWebApp and BIWebSDK have been combined into one repository BIWeb
-	# elif repo == 'Server':
-	# 	# COM, Common, Engine and Kernel have been combined into one repository Server
-	# else:
-	# 	# For all others repository, the relative path should be retained as in ClearCase
+	with file(symlink) as f:
+		origFilePath = f.read()
+	if repo == 'BIWeb':
+	 	# BIWebApp and BIWebSDK have been combined into one repository BIWeb
+		print 'BIWeb'
+	elif repo == 'Server':
+	 	# COM, Common, Engine and Kernel have been combined into one repository Server
+		print 'Server'
+	else:
+	 	# For all others repository, the relative path should be retained as in ClearCase
+		print "copying " + origFilePath + " to " + symlinkPath
+		subprocess.Popen(['git', 'rm', symlink])
+		subprocess.Popen(['cp', origFilePath, './'])
+		subprocess.Popen(['git', 'add', symlink])
+		subprocess.Popen(['git', 'commit', '-m', 'replace symlink'])
 
 
 for repo in repos:
@@ -38,6 +43,7 @@ for repo in repos:
 	if os.path.isdir(os.path.join(repoPath, '.git')):
 		symlinks = findSymlinks(repoPath)
 		while symlinks:
+			print symlinks
 			#resolve symlinks
 			for symlink in symlinks:
 				replaceSymlinkbyFile(repo, symlink)
