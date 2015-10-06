@@ -22,7 +22,18 @@ def replaceSymlinkbyFile(repo, symlink):
 	os.chdir(repoPath)
 	symlinkPath = os.path.join(repoPath, symlink)
 	with file(symlink) as f:
-		origFilePath = f.read()
+		path = f.read()
+		print "path read from file is: " + path
+		# This is an invalid symlink file, just remove it
+		if not path: 
+			subprocess.call(['git', 'rm', symlink])
+			return
+		origFilePath = os.path.abspath(path)
+	# If the original file doesn't exist, this symlink is invalid and just remove it
+	if not os.path.isfile(origFilePath):
+		subprocess.call(['git', 'rm', symlink])
+		return
+
 	if repo == 'BIWeb':
 	 	# BIWebApp and BIWebSDK have been combined into one repository BIWeb
 		print 'BIWeb'
@@ -32,10 +43,10 @@ def replaceSymlinkbyFile(repo, symlink):
 	else:
 	 	# For all others repository, the relative path should be retained as in ClearCase
 		print "copying " + origFilePath + " to " + symlinkPath
-		subprocess.Popen(['git', 'rm', symlink])
-		subprocess.Popen(['cp', origFilePath, './'])
-		subprocess.Popen(['git', 'add', symlink])
-		subprocess.Popen(['git', 'commit', '-m', 'replace symlink'])
+		subprocess.call(['git', 'rm', symlink])
+		subprocess.call(['cp', origFilePath, './'])
+		subprocess.call(['git', 'add', symlink])
+		subprocess.call(['git', 'commit', '-m', '"replace symlink"'])
 
 
 for repo in repos:
@@ -46,6 +57,7 @@ for repo in repos:
 			print symlinks
 			#resolve symlinks
 			for symlink in symlinks:
+				print "find symlink: " + repo + '/' + symlink
 				replaceSymlinkbyFile(repo, symlink)
 			#find again to resolve the embeded symlinks
 			symlinks = findSymlinks(repoPath)
