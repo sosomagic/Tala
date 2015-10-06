@@ -21,20 +21,15 @@ def replaceSymlinkbyFile(repo, symlink):
 	repoPath = os.path.join(view_path, repo)
 	os.chdir(repoPath)
 	symlinkPath = os.path.join(repoPath, symlink)
+	relativePath = ''
 	with file(symlink) as f:
-		path = f.read()
-		print "path read from file is: " + path
-		# This is an invalid symlink file, just remove it
-		if not path: 
-			subprocess.call(['git', 'rm', symlink])
-			return
-		origFilePath = os.path.abspath(path)
-	# If the original file doesn't exist, this symlink is invalid and just remove it
-	if not os.path.isfile(origFilePath):
+		relativePath = f.read()
+	print "path read from file is: " + relativePath
+	# This is an invalid symlink file, just remove it
+	if not relativePath: 
 		subprocess.call(['git', 'rm', symlink])
 		return
-
-	if repo == 'BIWeb':
+	if repo == 'BIWeb' or repo == 'Server':
 	 	# BIWebApp and BIWebSDK have been combined into one repository BIWeb
 		print 'BIWeb'
 	elif repo == 'Server':
@@ -42,6 +37,11 @@ def replaceSymlinkbyFile(repo, symlink):
 		print 'Server'
 	else:
 	 	# For all others repository, the relative path should be retained as in ClearCase
+	 	origFilePath = os.path.abspath(path)
+		# If the original file doesn't exist, this symlink is invalid and just remove it
+		if not os.path.isfile(origFilePath):
+			subprocess.call(['git', 'rm', symlink])
+			return
 		print "copying " + origFilePath + " to " + symlinkPath
 		subprocess.call(['git', 'rm', symlink])
 		subprocess.call(['cp', origFilePath, './'])
