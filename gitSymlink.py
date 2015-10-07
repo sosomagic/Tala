@@ -26,6 +26,8 @@ class gitSymlink(object):
 		self.rootPath = rootPath
 		repos = os.listdir(rootPath)
 		for repo in repos:
+			if repo == 'Mobile':
+				continue
 			repoPath = os.path.join(rootPath, repo)
 			# Ignore those non-git directories
 			if os.path.isdir(os.path.join(repoPath, '.git')):
@@ -76,13 +78,25 @@ class gitSymlink(object):
 			if not path:
 				print 'invalid symlink'
 				return
-			paths = path.split('../')
-			if paths[-1].startswith('BIWebSDK') or paths[-1].startswith('BIWebApp'):
-				paths[-1] = 'BIWeb/' + paths[-1]
-			elif paths[-1].startswith('COM') or paths[-1].startswith('Common') or paths[-1].startswith('Engine') or paths[-1].startswith('Kernel'):
-				paths[-1] = 'Server/' + paths[-1]
-			originalPath = os.path.join(self.rootPath, paths[-1])
-		return originalPath
+		return self.restoreAbsPath(symlinkPath, path)
+
+	def restoreAbsPath(self, curPath, relPath):
+		sep = None
+		if relPath.startswith('../'):
+			sep = '../'
+		else:
+			sep = '..\\'
+		paths = relPath.split(sep)
+		for path in paths:
+			if path == sep:
+				curPath = os.path.join(curPath, os.pardir)
+			else:
+				break
+		if paths[-1].startswith('BIWebSDK') or paths[-1].startswith('BIWebApp'):
+			paths[-1] = 'BIWeb/' + paths[-1]
+		elif paths[-1].startswith('COM') or paths[-1].startswith('Common') or paths[-1].startswith('Engine') or paths[-1].startswith('Kernel'):
+			paths[-1] = 'Server/' + paths[-1]
+		return os.path.join(curPath, paths[-1])
 
 	def findSymlinks(self, repoPath):
 		os.chdir(repoPath)
@@ -94,5 +108,4 @@ class gitSymlink(object):
 		for i in infoList:
 			if i:
 				files.append(i)
-		print files
 		return files
