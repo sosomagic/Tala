@@ -33,8 +33,8 @@ class gitSymlink(object):
 			if os.path.isdir(os.path.join(repoPath, '.git')):
 				symlinks = self.findSymlinks(repoPath)
 				for symlink in symlinks:
-					symlinkPath = os.path.join(repoPath, symlink).replace('/', '\\')
-					originalPath = self.getOriginalPath(repo, symlinkPath).replace('/', '\\')
+					symlinkPath = os.path.join(repoPath, symlink)
+					originalPath = self.getOriginalPath(repo, symlinkPath)
 					if originalPath:
 						self.symlinkDict[symlinkPath] = originalPath
 					#print "symlink: " + symlinkPath
@@ -103,7 +103,7 @@ class gitSymlink(object):
 		proc1 = subprocess.Popen(['git', 'ls-files', '-s'], stdout=subprocess.PIPE)
 		proc2 = subprocess.Popen(['egrep', '^120000'], stdin=proc1.stdout, stdout=subprocess.PIPE)
 		proc3 = subprocess.Popen(['cut', '-f', '2'], stdin=proc2.stdout, stdout=subprocess.PIPE)
-		infoList = proc3.communicate()[0].split('\r\n')
+		infoList = proc3.communicate()[0].split('\n')
 		files = []
 		for i in infoList:
 			if i:
