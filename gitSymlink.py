@@ -20,7 +20,7 @@ class gitSymlink(object):
 			subprocess.call(['git', 'rm', '-rf', symlinkPath])
 			subprocess.call(['cp', '-r', originalPath, symlinkPath])
 		subprocess.call(['repo', 'forall', '-c', 'git', 'add', '.'])
-		subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"'])
+		subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"']).lstrip()
 
 	def getSymlinksMap(self, rootPath):
 		print "========================================= Getting symlink and original from repositories"
