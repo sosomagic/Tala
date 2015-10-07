@@ -102,7 +102,7 @@ class gitSymlink(object):
 		else:
 			originalPath = tmpPath
 		#print 'originalPath: ' + originalPath
-		return originalPath
+		return os.path.normpath(originalPath)
 
 	def findSymlinks(self, repoPath):
 		os.chdir(repoPath)
