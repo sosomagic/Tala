@@ -1,6 +1,7 @@
 import os
 import subprocess
 import csv
+from sys import argv
 
 class gitSymlink(object):
 	symlinkDict = {}
@@ -113,3 +114,8 @@ class gitSymlink(object):
 			if i:
 				files.append(i)
 		return files
+
+
+if __name__ == '__main__':
+	script, view_path = argv
+	gitSymlink().getSymlinksMap(view_path)
