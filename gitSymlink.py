@@ -2,6 +2,7 @@ import os
 import subprocess
 import csv
 from gitSymlink import *
+from sys import argv
 
 class gitSymlink(object):
 	symlinkDict = {}
@@ -23,8 +24,8 @@ class gitSymlink(object):
 		subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"'])
 
 	def getSymlinksMap(self, rootPath):
-		print "========================================= Getting symlink and original from repositories"
-		self.rootPath = rootPath
+		print "========================== Getting symlink and original from repositories =========================="
+		self.rootPath = os.path.normpath(rootPath)
 		repos = os.listdir(rootPath)
 		for repo in repos:
 			if repo == 'Mobile':
@@ -33,27 +34,27 @@ class gitSymlink(object):
 			# Ignore those non-git directories
 			if os.path.isdir(os.path.join(repoPath, '.git')):
 				symlinks = self.findSymlinks(repoPath)
+				print symlinks
 				for symlink in symlinks:
-					symlinkPath = os.path.join(repoPath, symlink).replace('/', '\\')
+					symlinkPath = os.path.join(repoPath, symlink)
+					symlinkPath = os.path.normpath(symlinkPath)
 					if os.path.exists(symlinkPath):
-						originalPath = self.getOriginalPath(repo, symlinkPath).replace('/', '\\').strip('\r\n')
-					if originalPath and os.path.exists(originalPath):
-						self.symlinkDict[symlinkPath] = originalPath
-					#print "symlink: " + symlinkPath
-					#print "original: " + originalPath
-		# Resolve the nested symlink pointer
-		#self.printSymlinkDict()
+						originalPath = self.getOriginalPath(repo, symlinkPath)
+						symlinkPath = os.path.normpath(symlinkPath)
+						if originalPath and os.path.exists(originalPath):
+							self.symlinkDict[symlinkPath] = originalPath
+							print symlinkPath, originalPath
 		#self.writeSymlinkDicttoFile(rootPath + '/dict1.csv')
 		for key, value in self.symlinkDict.iteritems():
 			n = 0
 			while self.symlinkDict.has_key(value) and n < 10:
 				self.symlinkDict[key] = self.symlinkDict[value]
-				value = self.symlinkDict[value]
+				value = self.symlinkDict[key]
+				print value
 				n += 1
 			if n == 10:
 				print "There is infinite loop for the nested symlinks"
-		#self.printSymlinkDict()
-		self.writeSymlinkDicttoFile(rootPath + '/dict2.csv')
+		self.writeSymlinkDicttoFile(rootPath + '/dict.csv')
 
 	def printSymlinkDict(self):
 		for key, value in self.symlinkDict.iteritems():
@@ -82,39 +83,40 @@ class gitSymlink(object):
 		return self.restoreAbsPath(symlinkPath, path)
 
 	def restoreAbsPath(self, curPath, relPath):
-		sep = None
-		if relPath.startswith('../'):
-			sep = '/'
+		originalPath = None
+		sep = os.path.sep
+		curPath = os.path.normpath(curPath)
+		relPath = os.path.normpath(relPath)
+		print 'curPath: ' + curPath
+		print 'relPath: ' + relPath
+		relPath = '..' + sep + '..' + sep + relPath
+		tmpPath = os.path.normpath(curPath+relPath)
+		print 'tmpPath: ' + tmpPath
+		oriRef = relPath.split('..'+sep)[-1].split(sep)[0]
+		oriRepo = os.path.split(tmpPath.split(sep+relPath.split('..'+sep)[-1])[0])[1]
+		
+		if oriRepo == 'BIWeb' and (oriRef == 'BIWebApp' or oriRef == 'BIWebSDK'):
+		 	originalPath = os.path.normpath(os.path.join(self.rootPath, 'BIWeb', relPath.split('..'+sep)[-1]))
+		elif oriRepo == 'Server' and (oriRef == 'Common' or oriRef == 'COM' or oriRef == 'Engine' or oriRef == 'Kernel'):
+			originalPath = os.path.normpath(os.path.join(self.rootPath, 'Server', relPath.split('..'+sep)[-1]))
 		else:
-			sep = '\\'
-		paths = relPath.split(sep)
-		curPath = os.path.abspath(os.path.join(curPath, os.pardir))
-		for path in paths:
-			if path == '..':
-				curPath = os.path.abspath(os.path.join(curPath, os.pardir))
-			else:
-				break
-		paths = relPath.split('..' + sep)
-		if paths[-1].startswith('BIWebSDK') or paths[-1].startswith('BIWebApp'):
-			curPath = os.path.abspath(os.path.join(curPath, os.pardir))
-			paths[-1] = 'BIWeb/' + paths[-1]
-		elif paths[-1].startswith('COM') or paths[-1].startswith('Common') or paths[-1].startswith('Engine') or paths[-1].startswith('Kernel'):
-			curPath = os.path.abspath(os.path.join(curPath, os.pardir))
-			paths[-1] = 'Server/' + paths[-1]
-		return os.path.join(curPath, paths[-1])
+			originalPath = tmpPath
+		print 'originalPath: ' + originalPath
+		return originalPath
 
 	def findSymlinks(self, repoPath):
 		os.chdir(repoPath)
 		proc1 = subprocess.Popen(['git', 'ls-files', '-s'], stdout=subprocess.PIPE)
 		proc2 = subprocess.Popen(['egrep', '^120000'], stdin=proc1.stdout, stdout=subprocess.PIPE)
 		proc3 = subprocess.Popen(['cut', '-f', '2'], stdin=proc2.stdout, stdout=subprocess.PIPE)
-		infoList = proc3.communicate()[0].split('\r\n')
+		infoList = proc3.communicate()[0].split('\n')
 		files = []
 		for i in infoList:
 			if i:
-				files.append(i)
+				files.append(os.path.normpath(i))
 		return files
 
 if __name__ == '__main__':
 	script, view_path = argv
 	gitSymlink().getSymlinksMap(view_path)
+	#gitSym.replaceSymlinks(view_path)
