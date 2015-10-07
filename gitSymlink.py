@@ -35,7 +35,7 @@ class gitSymlink(object):
 				symlinks = self.findSymlinks(repoPath)
 				for symlink in symlinks:
 					symlinkPath = os.path.join(repoPath, symlink).replace('/', '\\')
-					originalPath = self.getOriginalPath(repo, symlinkPath).replace('/', '\\')
+					originalPath = self.getOriginalPath(repo, symlinkPath).replace('/', '\\').lstrip()
 					if originalPath:
 						self.symlinkDict[symlinkPath] = originalPath
 					#print "symlink: " + symlinkPath
