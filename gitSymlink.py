@@ -86,8 +86,11 @@ class gitSymlink(object):
 		os.chdir(repoPath)
 		proc1 = subprocess.Popen(['git', 'ls-files', '-s'], stdout=subprocess.PIPE)
 		proc2 = subprocess.Popen(['egrep', '^120000'], stdin=proc1.stdout, stdout=subprocess.PIPE)
-		infoList = proc2.communicate()[0].split()
+		proc3 = subprocess.Popen(['cut', '-f', '2'], stdin=proc2.stdout, stdout=subprocess.PIPE)
+		infoList = proc3.communicate()[0].split('\n')
 		files = []
-		for i in range(3, len(infoList), 4):
-			files.append(infoList[i])
+		for i in infoList:
+			if i:
+				files.append(i)
+		print files
 		return files
