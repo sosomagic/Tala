@@ -89,7 +89,7 @@ class gitSymlink(object):
 		paths = relPath.split(sep)
 		for path in paths:
 			if path == sep:
-				curPath = os.path.join(curPath, os.pardir)
+				curPath = os.path.abspath(os.path.join(curPath, os.pardir))
 			else:
 				break
 		if paths[-1].startswith('BIWebSDK') or paths[-1].startswith('BIWebApp'):
