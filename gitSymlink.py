@@ -13,8 +13,8 @@ class gitSymlink(object):
 			if not originalPath or not os.path.exists(originalPath):
 				continue
 			repo = symlinkPath.split(rootPath)[1].split('\\')[0]
-			print os.path.join(rootPath, repo)
-			y = raw_input("continue?")
+			#print os.path.join(rootPath, repo)
+			#y = raw_input("continue?")
 			os.chdir(os.path.join(rootPath, repo))
 			#subprocess.call(['pwd'])
 			subprocess.call(['git', 'rm', '-rf', symlinkPath])
@@ -46,7 +46,6 @@ class gitSymlink(object):
 		for key, value in self.symlinkDict.iteritems():
 			n = 0
 			while self.symlinkDict.has_key(value) and n < 10:
-				print key, value
 				self.symlinkDict[key] = self.symlinkDict[value]
 				value = self.symlinkDict[value]
 				n += 1
