@@ -89,7 +89,7 @@ class gitSymlink(object):
 		proc1 = subprocess.Popen(['git', 'ls-files', '-s'], stdout=subprocess.PIPE)
 		proc2 = subprocess.Popen(['egrep', '^120000'], stdin=proc1.stdout, stdout=subprocess.PIPE)
 		proc3 = subprocess.Popen(['cut', '-f', '2'], stdin=proc2.stdout, stdout=subprocess.PIPE)
-		infoList = proc3.communicate()[0].split('\n')
+		infoList = proc3.communicate()[0].split('\r\n')
 		files = []
 		for i in infoList:
 			if i:
