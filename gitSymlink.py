@@ -87,11 +87,11 @@ class gitSymlink(object):
 		sep = os.path.sep
 		curPath = os.path.normpath(curPath)
 		relPath = os.path.normpath(relPath)
-		print 'curPath: ' + curPath
-		print 'relPath: ' + relPath
+		#print 'curPath: ' + curPath
+		#print 'relPath: ' + relPath
 		relPath = '..' + sep + '..' + sep + relPath
 		tmpPath = os.path.normpath(curPath+relPath)
-		print 'tmpPath: ' + tmpPath
+		#print 'tmpPath: ' + tmpPath
 		oriRef = relPath.split('..'+sep)[-1].split(sep)[0]
 		oriRepo = os.path.split(tmpPath.split(sep+relPath.split('..'+sep)[-1])[0])[1]
 		
@@ -101,7 +101,7 @@ class gitSymlink(object):
 			originalPath = os.path.normpath(os.path.join(self.rootPath, 'Server', relPath.split('..'+sep)[-1]))
 		else:
 			originalPath = tmpPath
-		print 'originalPath: ' + originalPath
+		#print 'originalPath: ' + originalPath
 		return originalPath
 
 	def findSymlinks(self, repoPath):
