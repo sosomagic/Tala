@@ -10,7 +10,7 @@ class gitSymlink(object):
 	def replaceSymlinks(self, rootPath):
 		self.rootPath = rootPath
 		for symlinkPath, originalPath in self.symlinkDict.iteritems():
-			if not originalPath or not os.path.exists(originalPath):
+			if not originalPath or not os.path.exists(originalPath) or not os.path.exists(symlinkPath):
 				continue
 			repo = symlinkPath.split(rootPath)[1].split('\\')[0]
 			#print os.path.join(rootPath, repo)
