@@ -43,7 +43,7 @@ class gitSymlink(object):
 						symlinkPath = os.path.normpath(symlinkPath)
 						if originalPath and os.path.exists(originalPath):
 							self.symlinkDict[symlinkPath] = originalPath
-							print symlinkPath, originalPath
+							#print symlinkPath, originalPath
 		#self.writeSymlinkDicttoFile(rootPath + '/dict1.csv')
 		for key, value in self.symlinkDict.iteritems():
 			n = 0
