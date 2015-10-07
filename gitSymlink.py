@@ -34,7 +34,7 @@ class gitSymlink(object):
 			# Ignore those non-git directories
 			if os.path.isdir(os.path.join(repoPath, '.git')):
 				symlinks = self.findSymlinks(repoPath)
-				print symlinks
+				#print symlinks
 				for symlink in symlinks:
 					symlinkPath = os.path.join(repoPath, symlink)
 					symlinkPath = os.path.normpath(symlinkPath)
