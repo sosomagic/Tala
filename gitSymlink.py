@@ -106,5 +106,4 @@ class gitSymlink(object):
 		for i in infoList:
 			if i:
 				files.append(i)
-		print files
 		return files
