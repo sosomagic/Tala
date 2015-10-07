@@ -83,18 +83,22 @@ class gitSymlink(object):
 	def restoreAbsPath(self, curPath, relPath):
 		sep = None
 		if relPath.startswith('../'):
-			sep = '../'
+			sep = '/'
 		else:
-			sep = '..\\'
+			sep = '\\'
 		paths = relPath.split(sep)
+		curPath = os.path.abspath(os.path.join(curPath, os.pardir))
 		for path in paths:
-			if path == sep:
+			if path == '..':
 				curPath = os.path.abspath(os.path.join(curPath, os.pardir))
 			else:
 				break
+		paths = relPath.split('..' + sep)
 		if paths[-1].startswith('BIWebSDK') or paths[-1].startswith('BIWebApp'):
+			curPath = os.path.abspath(os.path.join(curPath, os.pardir))
 			paths[-1] = 'BIWeb/' + paths[-1]
 		elif paths[-1].startswith('COM') or paths[-1].startswith('Common') or paths[-1].startswith('Engine') or paths[-1].startswith('Kernel'):
+			curPath = os.path.abspath(os.path.join(curPath, os.pardir))
 			paths[-1] = 'Server/' + paths[-1]
 		return os.path.join(curPath, paths[-1])
 
