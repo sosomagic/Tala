@@ -1,11 +1,23 @@
 import os
 import csv
 import subprocess
+import shutil
 from sys import argv
 
 script, rootPath, symFile = argv
 
 rootPath = os.path.normpath(rootPath)
+
+def copyanything(fromPath, toPath):
+	head = toPath.split()[0]
+	tail = toPath.split()[1]
+	if not os.path.exists(head):
+		os.makedirs(head)
+	if os.path.isdir(fromPath):
+		shutil.copytree(fromPath, toPath)
+	else:
+		shutil.copy(fromPath, toPath)
+
 with open(symFile, mode='r') as file:
 	reader = csv.reader(file)
 	logger = open('error.txt', 'w')
@@ -19,17 +31,15 @@ with open(symFile, mode='r') as file:
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
 		if repo == 'BIWeb':
-			print os.path.exists(fromPath)
 			if os.path.exists(fromPath):
 				# cd to repository
 				os.chdir(repoPath)
 				# rm the existing symlink file or directory
 				subprocess.call(['git', 'rm', '-rf', toPath])
-				subprocess.call(['cp', '-rf', fromPath, toPath])
+				copyanything(fromPath, toPath)
 			else:
 				print 'write into log'
 				logger.write('Original file not exists: ' + fromPath + '\n')
-				
 	logger.close()
 	os.chdir(rootPath)
 	subprocess.call(['repo', 'forall', '-c', 'git', 'add', '.'])
