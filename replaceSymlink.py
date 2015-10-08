@@ -25,7 +25,7 @@ with open(symFile, mode='r') as file:
 				os.chdir(repoPath)
 				# rm the existing symlink file or directory
 				subprocess.call(['git', 'rm', '-rf', toPath])
-				subprocess.call(['cp', '-r', fromPath, toPath])
+				subprocess.call(['cp', '-rf', fromPath, toPath])
 			else:
 				print 'write into log'
 				logger.write('Original file not exists: ' + fromPath + '\n')
