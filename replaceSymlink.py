@@ -21,6 +21,6 @@ with open(symFile, mode='r') as file:
 			# cd to repository
 			os.chdir(repoPath)
 			# rm the existing symlink file or directory
-			subprocess.call(['git', 'rm', '-rf', symToPath])
-			subprocess.call(['cp', '-r', symFromPath, symToPath])
+			subprocess.call(['git', 'rm', '-rf', toPath])
+			subprocess.call(['cp', '-r', fromPath, toPath])
 		
