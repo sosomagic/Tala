@@ -30,21 +30,25 @@ with open(symFile, mode='r') as file:
 		fromPath = os.path.join(rootPath, symFrom)
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
-		if os.path.exists(fromPath):
-			# cd to repository
-			os.chdir(repoPath)
-			# rm the existing symlink file or directory
-			subprocess.call(['git', 'rm', '-rf', toPath])
-			copyanything(fromPath, toPath)
-		else:
-			print 'write into log'
-			logger.write('Original file not exists: ' + fromPath + '\n')
+		if repo == 'BinSource':
+			if not os.path.exists(toPath):
+				continue
+			if os.path.exists(fromPath):
+				# cd to repository
+				os.chdir(repoPath)
+				# rm the existing symlink file or directory
+				subprocess.call(['git', 'rm', '-rf', toPath])
+				copyanything(fromPath, toPath)
+			else:
+				print fromPath + 'write into log'
+				logger.write('Original file not exists: ' + fromPath + '\n')
 	logger.close()
 
 repos = os.listdir(rootPath)
 for repo in repos:
 	repoPath = os.path.join(rootPath, repo)
-	if os.path.isdir(os.path.join(repoPath, '.git')):
-		os.chdir(repoPath)
-		subprocess.call(['git', 'add', '.'])
-		subprocess.call(['git', 'commit', '-m', '"replace symlinks"'])
+	if os.path.isdir(os.path.join(repoPath, '.git')) and repo == 'BinSource':
+		if os.path.exists(repoPath):
+			os.chdir(repoPath)
+			subprocess.call(['git', 'add', '.'])
+			subprocess.call(['git', 'commit', '-m', '"replace symlinks"'])
