@@ -42,5 +42,5 @@ with open(symFile, mode='r') as file:
 				logger.write('Original file not exists: ' + fromPath + '\n')
 	logger.close()
 	os.chdir(rootPath)
-	subprocess.call(['repo', 'forall', '-c', 'git', 'add', '.'])
-	subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"'])
+	#subprocess.call(['repo', 'forall', '-c', 'git', 'add', '.'])
+	#subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"'])
