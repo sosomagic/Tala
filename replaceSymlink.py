@@ -18,7 +18,8 @@ with open(symFile, mode='r') as file:
 		fromPath = os.path.join(rootPath, symFrom)
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
-		if repo == '3rdParty' or repo == 'BIWeb':
+		if repo == 'BIWeb':
+			print 'exits?: ' + os.path.exists(fromPath)
 			if os.path.exists(fromPath):
 				# cd to repository
 				os.chdir(repoPath)
@@ -26,6 +27,7 @@ with open(symFile, mode='r') as file:
 				subprocess.call(['git', 'rm', '-rf', toPath])
 				subprocess.call(['cp', '-r', fromPath, toPath])
 			else:
+				print 'write into log'
 				logger.write('Original file not exists: ' + fromPath + '\n')
 				
 	logger.close()
