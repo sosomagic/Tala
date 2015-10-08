@@ -15,6 +15,6 @@ with open('result.csv', mode='r') as file:
 		toPath = os.path.join(rootPath, symTo)
 		symFrom = os.path.normpath(row[1])
 		fromPath = os.path.join(rootPath, symFrom)
-		if symFrom.startswith('/BIWeb/BIWebApp/code/html/MSTRWeb/WEB-INF'):
+		if symFrom.startswith(os.path.normpath('/BIWeb/BIWebApp/code/html/MSTRWeb/WEB-INF')):
 			print fromPath
 			print os.path.exists(fromPath)
