@@ -17,9 +17,10 @@ with open(symFile, mode='r') as file:
 		fromPath = os.path.join(rootPath, symFrom)
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
-		# cd to repository
-		os.chdir(repoPath)
-		# rm the existing symlink file or directory
-		subprocess.call(['git', 'rm', '-rf', symToPath])
-		subprocess.call(['cp', '-r', symFromPath, symToPath])
+		if repo == '3rdParty':
+			# cd to repository
+			os.chdir(repoPath)
+			# rm the existing symlink file or directory
+			subprocess.call(['git', 'rm', '-rf', symToPath])
+			subprocess.call(['cp', '-r', symFromPath, symToPath])
 		
