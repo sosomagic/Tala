@@ -9,8 +9,8 @@ script, rootPath, symFile = argv
 rootPath = os.path.normpath(rootPath)
 
 def copyanything(fromPath, toPath):
-	head = toPath.split()[0]
-	tail = toPath.split()[1]
+	head = os.path.split(toPath)[0]
+	tail = os.path.split(toPath)[1]
 	if not os.path.exists(head):
 		os.makedirs(head)
 	if os.path.isdir(fromPath):
