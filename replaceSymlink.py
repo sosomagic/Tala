@@ -24,11 +24,13 @@ with open(symFile, mode='r') as file:
 		if not os.path.exists(fromPath):
 			logger.write('Original file not exists: ' + fromPath + '\n')
 			continue
-		if repo == '3rdParty':
+		if repo == '3rdParty' or repo == 'BIWeb':
 			# cd to repository
 			os.chdir(repoPath)
 			# rm the existing symlink file or directory
 			subprocess.call(['git', 'rm', '-rf', toPath])
 			subprocess.call(['cp', '-r', fromPath, toPath])
 	logger.close()
-		
+	os.chdir(rootPath)
+	subprocess.call(['repo', 'forall', '-c', 'git', 'add', '.'])
+	subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"'])
