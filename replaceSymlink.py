@@ -41,6 +41,11 @@ with open(symFile, mode='r') as file:
 				print 'write into log'
 				logger.write('Original file not exists: ' + fromPath + '\n')
 	logger.close()
-	os.chdir(rootPath)
-	#subprocess.call(['repo', 'forall', '-c', 'git', 'add', '.'])
-	#subprocess.call(['repo', 'forall', '-c', 'git', 'commit', '-m', '"replace symlinks"'])
+
+repos = os.listdir(rootPath)
+for repo in repos:
+	repoPath = os.path.join(rootPath, repo)
+	if os.path.isdir(os.path.join(repoPath, '.git')) and repo == 'BIWeb':
+		os.chdir(repoPath)
+		subprocess.call(['git', 'add', '.'])
+		subprocess.call(['git', 'commit', '-m', '"replace symlinks"'])
