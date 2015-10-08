@@ -19,7 +19,7 @@ with open(symFile, mode='r') as file:
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
 		if repo == 'BIWeb':
-			print 'exits?: ' + os.path.exists(fromPath)
+			print os.path.exists(fromPath)
 			if os.path.exists(fromPath):
 				# cd to repository
 				os.chdir(repoPath)
