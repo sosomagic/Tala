@@ -30,6 +30,8 @@ with open(symFile, mode='r') as file:
 		fromPath = os.path.join(rootPath, symFrom)
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
+		if repo == '3rdParty_Unix' or repo == 'Systools_Unix':
+			continue
 		if repo == 'BinSource':
 			if not os.path.exists(toPath):
 				continue
