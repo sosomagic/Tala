@@ -9,7 +9,7 @@ import re
 script, file_path = argv
 
 cleanup_date = (datetime.date.today() - datetime.timedelta(days=120)).strftime('%Y%m%d')
-print "I will delete the build files older than 2 months, but I will keep the latest build for each milestone."
+print "I will delete the build files older than 2 months, but I will keep the latest build for each milestone.a"
 
 
 for dirname, dirnames, filenames in os.walk(file_path):
