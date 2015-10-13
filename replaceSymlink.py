@@ -32,24 +32,24 @@ with open(symFile, mode='r') as file:
 		repoPath = os.path.join(rootPath, repo)
 		if repo == '3rdParty_Unix' or repo == 'Systools_Unix':
 			continue
-		if repo == 'BinSource':
-			if not os.path.exists(toPath):
-				continue
-			if os.path.exists(fromPath):
-				# cd to repository
-				os.chdir(repoPath)
-				# rm the existing symlink file or directory
-				subprocess.call(['git', 'rm', '-rf', toPath])
-				copyanything(fromPath, toPath)
-			else:
-				print fromPath + 'write into log'
-				logger.write('Original file not exists: ' + fromPath + '\n')
+		
+		if not os.path.exists(toPath):
+			continue
+		if os.path.exists(fromPath):
+			# cd to repository
+			os.chdir(repoPath)
+			# rm the existing symlink file or directory
+			subprocess.call(['git', 'rm', '-rf', toPath])
+			copyanything(fromPath, toPath)
+		else:
+			print fromPath + 'write into log'
+			logger.write('Original file not exists: ' + fromPath + '\n')
 	logger.close()
 
 repos = os.listdir(rootPath)
 for repo in repos:
 	repoPath = os.path.join(rootPath, repo)
-	if os.path.isdir(os.path.join(repoPath, '.git')) and repo == 'BinSource':
+	if os.path.isdir(os.path.join(repoPath, '.git')):
 		if os.path.exists(repoPath):
 			os.chdir(repoPath)
 			subprocess.call(['git', 'add', '.'])
