@@ -30,7 +30,7 @@ with open(symFile, mode='r') as file:
 		fromPath = os.path.join(rootPath, symFrom)
 		repo = symTo.split(os.path.sep)[1]
 		repoPath = os.path.join(rootPath, repo)
-		if repo == '3rdParty_Unix' or repo == 'Systools_Unix':
+		if repo == '3rdParty_UNIX' or repo == 'Systools_UNIX':
 			continue
 		
 		if not os.path.exists(toPath):
